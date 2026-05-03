@@ -23,9 +23,16 @@ class KDSController extends Controller
                 'type' => 'pos',
                 'status' => $o->status,
                 'created_at' => $o->created_at,
-                'items' => $o->items->map(function($i) {
+                'items' => $o->items->map(function ($i) {
+                    // Karena tadi di Tinker jalan pakai withTrashed(), 
+                    // kita panggil secara eksplisit di sini agar aman.
+                    $product = \App\Models\Product::withTrashed()->find($i->product_id);
+
+                    $namaMenu = $product ? $product->name : 'Menu Tak Terdeteksi';
+                    $varian = $i->variant_name ? ' (' . $i->variant_name . ')' : '';
+
                     return [
-                        'name' => $i->product->name . ($i->variant_name ? ' ('.$i->variant_name.')' : ''),
+                        'name' => $namaMenu . $varian,
                         'quantity' => $i->quantity,
                         'notes' => $i->special_instructions,
                     ];
@@ -33,8 +40,10 @@ class KDSController extends Controller
             ]);
         }
 
+        // --- BAGIAN 2: Pesanan dari Web (QRIS) ---
         foreach ($qrisOrders as $q) {
             $items = is_array($q->items) ? $q->items : json_decode($q->items, true);
+
             $unifiedOrders->push([
                 'id' => $q->id,
                 'order_number' => $q->order_code,
@@ -42,18 +51,19 @@ class KDSController extends Controller
                 'type' => 'web',
                 'status' => $q->status === 'confirmed' ? 'pending' : 'processing',
                 'created_at' => $q->created_at,
-                'items' => collect($items)->map(function($i) {
+                'items' => collect($items)->map(function ($i) {
+                    // SIMPAN KODE AMAN DI SINI
                     return [
-                        'name' => $i['name'] . (isset($i['variant_name']) && $i['variant_name'] ? ' ('.$i['variant_name'].')' : ''),
-                        'quantity' => $i['quantity'],
-                        'notes' => $i['special_instructions'] ?? '',
+                        'name' => ($i['name'] ?? 'Menu Web') . (isset($i['variant_name']) && $i['variant_name'] ? ' (' . $i['variant_name'] . ')' : ''),
+                        'quantity' => $i['quantity'] ?? 1,
+                        'notes' => $i['special_instructions'] ?? $i['notes'] ?? '',
                     ];
                 })
             ]);
         }
 
         $orders = $unifiedOrders->sortBy('created_at')->values();
-
+        // dd($orders->toArray());
         return view('barista.kds', compact('orders'));
     }
 

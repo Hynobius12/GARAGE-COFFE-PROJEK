@@ -32,14 +32,13 @@
                 {{ session('error') }}
             </div>
         @endif
-
-        <!-- Judul dan Tombol Tambah -->
+<!-- 
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Inventori Bahan Baku</h2>
-            <a href="{{ route('admin.raw-materials.create') }}" class="bg-primary text-white px-4 py-2 rounded">
-                + Tambah Bahan Baku
+            <h2 class="text-2xl font-bold">Produk Menu</h2>
+            <a href="{{ route('admin.products.create') }}" class="bg-primary text-white px-4 py-2 rounded">
+                + Tambah Produk
             </a>
-        </div>
+        </div> -->
 
         <!-- Tabel kamu ada di bawah sini -->
     </div>

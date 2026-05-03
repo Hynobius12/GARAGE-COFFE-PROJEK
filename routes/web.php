@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Barista\KdsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -80,10 +80,12 @@ Route::middleware(['auth', 'role:owner|cashier|barista'])->prefix('admin')->name
 
 Route::middleware(['auth', 'role:barista'])->group(function () {
     // Menampilkan halaman KDS
-    Route::get('/barista/kds', function () {
-        $orders = \App\Models\Order::whereIn('status', ['pending', 'processing'])->get();
-        return view('barista.kds', compact('orders'));
-    })->name('barista.kds');
+    // Route::get('/barista/kds', function () {
+    //     $orders = \App\Models\Order::whereIn('status', ['pending', 'processing'])->get();
+    //     return view('barista.kds', compact('orders'));
+    // })->name('barista.kds');
+
+    Route::get('/barista/kds', [KdsController::class, 'index'])->name('barista.kds');
 
     // Menangani aksi PROSES PESANAN
     Route::post('/barista/kds/{id}/process', function ($id) {
