@@ -390,7 +390,7 @@
     </div>
 
     <!-- Payment Proof Modal -->
-    <div x-show="isProofModalOpen" style="display:none;" class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+    <div x-show="isProofModalOpen" style="display:none;" class="fixed inset-0 z-index: 9999 !important flex items-center justify-center p-4"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -413,8 +413,8 @@
             </div>
         </div>
     </div>
-
-    <!-- QRIS Payment Modal -->
+<!-- 
+    QRIS Payment Modal
     <div x-show="isQrisModalOpen" style="display: none;"  class="fixed inset-0 z-50 flex items-center justify-center p-4 z-[999]">
         <div x-show="isQrisModalOpen" x-transition.opacity.duration.300ms @click="closeQris()" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
         <div x-show="isQrisModalOpen" 
@@ -444,7 +444,44 @@
                 </button>
             </div>
         </div>
+    </div> -->
+
+    <!-- Payment Proof Modal (VERSI TERBARU) -->
+<template x-teleport="body">
+    <div x-show="isProofModalOpen" 
+         style="display:none; z-index: 99999999 !important; position: fixed !important; left: 0; top: 0; width: 100vw; height: 100vh;" 
+         class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+         
+        <!-- Overlay Gelap (Pake z-index gila biar nutupin semua) -->
+        <div @click="isProofModalOpen = false; proofImageUrl = ''" 
+             class="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
+             
+        <!-- Box Fotonya -->
+        <div class="relative bg-[#1a1a1f] border border-white/10 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100">
+             
+            <div class="bg-[#151518] px-5 py-4 border-b border-white/5 flex justify-between items-center">
+                <h4 class="font-bold text-white">Bukti Transfer</h4>
+                <button @click="isProofModalOpen = false" class="text-gray-500 hover:text-white text-xl leading-none">&times;</button>
+            </div>
+            
+            <div class="p-4 text-center">
+                <template x-if="proofImageUrl">
+                    <!-- Max-height diatur biar gak kepotong layar -->
+                    <img :src="proofImageUrl" alt="Bukti Transfer" class="w-full rounded-xl object-contain max-h-[70vh] mx-auto">
+                </template>
+            </div>
+        </div>
     </div>
+</template>
 
     <!-- Receipt Print Template (Hidden) -->
     <div id="print-area" class="hidden">

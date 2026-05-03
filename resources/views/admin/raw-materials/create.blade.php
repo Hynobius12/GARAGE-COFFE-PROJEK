@@ -7,40 +7,58 @@
     </div>
 
     <div class="bg-white rounded-lg shadow overflow-hidden p-6 max-w-2xl">
+        <!-- NOMOR 1: TARUH DI SINI (Di luar/di atas Form) -->
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <strong>Waduh, ada yang salah:</strong>
+                <ul class="mt-2 list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form action="{{ route('admin.raw-materials.store') }}" method="POST">
             @csrf
-            
+
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Nama Bahan Baku</label>
-                <input type="text" name="name" class="w-full rounded-md border border-gray-300 px-3 py-2" required value="{{ old('name') }}" placeholder="Contoh: Biji Kopi Arabica">
+                <input type="text" name="name" class="w-full rounded-md border border-gray-300 px-3 py-2" required
+                    value="{{ old('name') }}" placeholder="Contoh: Biji Kopi Arabica">
                 @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">SKU (Kode Barang) - Opsional</label>
-                <input type="text" name="sku" class="w-full rounded-md border border-gray-300 px-3 py-2" value="{{ old('sku') }}" placeholder="Contoh: BR-ARB-01">
+                <input type="text" name="sku" class="w-full rounded-md border border-gray-300 px-3 py-2"
+                    value="{{ old('sku') }}" placeholder="Contoh: BR-ARB-01">
                 @error('sku') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Stok Awal</label>
-                    <input type="number" name="current_stock" class="w-full rounded-md border border-gray-300 px-3 py-2" required value="{{ old('current_stock', 0) }}">
+                    <input type="number" name="current_stock" class="w-full rounded-md border border-gray-300 px-3 py-2"
+                        required value="{{ old('current_stock', 0) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Batas Minimum (Re-order)</label>
-                    <input type="number" name="reorder_level" class="w-full rounded-md border border-gray-300 px-3 py-2" required value="{{ old('reorder_level', 0) }}">
+                    <input type="number" name="reorder_level" class="w-full rounded-md border border-gray-300 px-3 py-2"
+                        required value="{{ old('reorder_level', 0) }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Satuan</label>
-                    <input type="text" name="unit" class="w-full rounded-md border border-gray-300 px-3 py-2" required value="{{ old('unit', 'Gram') }}" placeholder="Gram, ml, Pcs">
+                    <input type="text" name="unit" class="w-full rounded-md border border-gray-300 px-3 py-2" required
+                        value="{{ old('unit', 'Gram') }}" placeholder="Gram, ml, Pcs">
                 </div>
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="bg-primary text-white px-6 py-2 rounded font-medium hover:bg-gray-800">Simpan Bahan Baku</button>
+                <button type="submit"
+                    class="bg-primary text-white px-6 py-2 rounded font-medium hover:bg-gray-800">Simpan Bahan
+                    Baku</button>
             </div>
         </form>
     </div>
