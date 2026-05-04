@@ -12,6 +12,7 @@ class ProductVariantController extends Controller
     public function index(Product $product)
     {
         $product->load('variants');
+        // return view('admin.products.variants', compact('product'));
         return view('admin.products.variants', compact('product'));
     }
 

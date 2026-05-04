@@ -51,29 +51,41 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        // Hapus dd($request->all()) kalau sudah yakin datanya masuk
+        // 1. Cek apakah ada produk dengan nama yang sama, TERMASUK yang sudah dihapus (withTrashed)
+        $product = \App\Models\Product::withTrashed()->where('name', $request->name)->first();
 
-        $product = new \App\Models\Product();
-        $product->category_id = $request->category_id;
-        $product->name = $request->name;
-        $product->slug = \Illuminate\Support\Str::slug($request->name);
-        $product->description = $request->description;
+        if ($product) {
+            // 2. Jika ditemukan (berarti staff pernah hapus lalu mau input lagi)
+            // Kita kembalikan datanya (restore)
+            $product->restore();
 
-        // UBAH BAGIAN INI: samakan dengan "base_price" di dd tadi
-        $product->base_price = $request->base_price;
+            // Update data lamanya dengan data baru dari form
+            $product->category_id = $request->category_id;
+            $product->description = $request->description;
+            $product->base_price = $request->base_price;
+            $product->is_available = $request->has('is_available');
+            $product->allergen_info = $request->allergen_info;
+        } else {
+            // 3. Jika benar-benar produk baru (belum pernah ada di database)
+            $product = new \App\Models\Product();
+            $product->name = $request->name;
+            // Gunakan time() agar slug selalu unik dan tidak akan pernah bentrok lagi
+            $product->slug = \Illuminate\Support\Str::slug($request->name) . '-' . time();
+            $product->category_id = $request->category_id;
+            $product->description = $request->description;
+            $product->base_price = $request->base_price;
+            $product->is_available = $request->has('is_available');
+            $product->allergen_info = $request->allergen_info;
+        }
 
-        $product->is_available = $request->has('is_available');
-
-        // Tambahan buat allergen (karena di dd kamu ada ini)
-        $product->allergen_info = $request->allergen_info;
-
+        // 4. Handle upload gambar (berlaku untuk restore maupun create baru)
         if ($request->hasFile('image_file')) {
             $product->image = $request->file('image_file')->store('products', 'public');
         }
 
         $product->save();
 
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambah!');
+        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diperbarui/ditambah!');
     }
     public function show(Product $product)
     {
@@ -130,7 +142,7 @@ class ProductController extends Controller
         $product->name = $request->name;
 
         // Update slug jika nama berubah
-        $product->slug = \Illuminate\Support\Str::slug($request->name);
+        $product->slug = \Illuminate\Support\Str::slug($request->name) . '-' . time();
 
         $product->description = $request->description;
         $product->base_price = $request->base_price; // Pakai base_price sesuai kolom DB
