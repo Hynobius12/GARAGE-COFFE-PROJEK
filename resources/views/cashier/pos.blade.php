@@ -413,8 +413,8 @@
             </div>
         </div>
     </div>
-<!-- 
-    QRIS Payment Modal
+
+    <!-- //QRIS Payment Modal -->
     <div x-show="isQrisModalOpen" style="display: none;"  class="fixed inset-0 z-50 flex items-center justify-center p-4 z-[999]">
         <div x-show="isQrisModalOpen" x-transition.opacity.duration.300ms @click="closeQris()" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
         <div x-show="isQrisModalOpen" 
@@ -444,7 +444,7 @@
                 </button>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Payment Proof Modal (VERSI TERBARU) -->
 <template x-teleport="body">
