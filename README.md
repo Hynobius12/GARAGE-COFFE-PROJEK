@@ -214,4 +214,4 @@ Proyek ini menggunakan lisensi [MIT](https://opensource.org/licenses/MIT) (mengi
 
 ---
 
-<p align="center">Dibuat dengan ☕ untuk Garage Coffee</p>
+<p align="center">Dibuat dengan untuk cafe Garage Coffee☕</p>
