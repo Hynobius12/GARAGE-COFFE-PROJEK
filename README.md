@@ -1,66 +1,217 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ☕ Garage Coffee
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem manajemen kafe berbasis web: **E-Menu untuk pelanggan, POS untuk kasir, KDS untuk barista, serta dashboard, inventori, dan laporan untuk owner**. Dibangun dengan Laravel 11.
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?logo=php&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)
+![Alpine.js](https://img.shields.io/badge/Alpine.js-3-8BC0D0?logo=alpinedotjs&logoColor=white)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🛒 Pelanggan (publik, tanpa login)
+- **E-Menu** di `/menu`: daftar produk per kategori beserta varian.
+- **Pesan & bayar via QRIS**: pelanggan mengisi nama, nomor meja/take away, lalu mengunggah **bukti pembayaran**.
+- **Halaman status pesanan** (`/order/{kode}/status`) yang auto-refresh setiap 30 detik.
 
-## Learning Laravel
+### 💵 Kasir (POS)
+- Halaman kasir dengan keranjang, varian produk, diskon, dan catatan khusus per item.
+- Metode pembayaran: **tunai, QRIS, transfer**.
+- Riwayat transaksi, serta pembaruan status pesanan POS dan pesanan web dari satu layar.
+- **Stok bahan baku berkurang otomatis** sesuai resep setiap kali transaksi POS dibuat.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🧑‍🍳 Barista (KDS)
+- *Kitchen Display System* di `/barista/kds`, auto-refresh setiap 15 detik.
+- Alur status: **pending → processing → completed**.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 📊 Owner / Admin
+- **Dashboard**: omzet hari ini (POS + web), jumlah pesanan, produk terlaris, grafik penjualan 7 hari, antrean bukti QRIS, dan peringatan stok menipis.
+- **Manajemen produk & kategori**: CRUD, upload gambar, varian harga, dan soft delete.
+- **Resep produk**: hubungkan produk dengan bahan baku beserta takaran per porsi.
+- **Inventori bahan baku**: CRUD, SKU, minimum stok, dan riwayat transaksi stok (`stock_transactions`).
+- **Verifikasi pesanan QRIS**: konfirmasi atau tolak pembayaran, proses, selesaikan, dan cetak struk.
+- **Laporan penjualan** dengan filter tanggal, **ekspor Excel dan PDF**.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 👥 Role & Hak Akses
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Menggunakan [spatie/laravel-permission](https://github.com/spatie/laravel-permission).
 
-### Premium Partners
+| Role | Akses |
+|------|-------|
+| `owner` | Semua fitur admin, POS, KDS, dan manajemen QRIS |
+| `cashier` | POS, riwayat transaksi, manajemen pesanan QRIS, cetak struk |
+| `barista` | KDS dan manajemen pesanan QRIS |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Setelah login, user diarahkan otomatis ke halaman sesuai role-nya.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🧱 Tech Stack
 
-## Code of Conduct
+| Layer | Teknologi |
+|-------|-----------|
+| Backend | PHP 8.2+, Laravel 11 |
+| Frontend | Blade, Tailwind CSS 3, Alpine.js, Vite 5 |
+| Auth | Laravel Breeze |
+| Role & permission | spatie/laravel-permission |
+| Ekspor laporan | maatwebsite/excel, barryvdh/laravel-dompdf |
+| Gambar | intervention/image |
+| Database | MySQL / MariaDB (direkomendasikan, lihat catatan di bawah) |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🗂️ Struktur Proyek
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+app/
+├── Console/Commands/      # garage:clean-old-data
+├── Exports/               # SalesExport (Excel)
+├── Http/Controllers/
+│   ├── Admin/             # Dashboard, Produk, Kategori, Resep, Varian,
+│   │                      # Bahan Baku, Order, QRIS, Laporan
+│   ├── Barista/           # KDSController
+│   ├── Cashier/           # POSController
+│   └── Web/               # MenuController (E-Menu publik)
+├── Models/                # Product, Category, Order, QrisOrder, RawMaterial, ...
+└── Services/
+    ├── OrderService.php       # Membuat order POS dalam satu DB transaction
+    └── InventoryService.php   # Pengurangan stok berdasarkan resep
+database/
+├── migrations/
+└── seeders/               # Role & user, kategori, produk, data demo
+resources/views/           # admin/, cashier/, barista/, public/, auth/
+routes/web.php
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🚀 Instalasi
+
+### Prasyarat
+- PHP **8.2+** dengan ekstensi umum Laravel (`mbstring`, `gd`, `pdo_mysql`, dll.)
+- Composer
+- Node.js 18+ dan npm
+- MySQL atau MariaDB
+
+### Langkah
+
+```bash
+# 1. Clone repo
+git clone https://github.com/<username>/<nama-repo>.git
+cd <nama-repo>
+
+# 2. Install dependency
+composer install
+npm install
+
+# 3. Siapkan environment
+cp .env.example .env
+php artisan key:generate
+```
+
+Edit `.env` dan arahkan ke database MySQL kamu:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=garage_coffee
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+```bash
+# 4. Migrasi dan seed data awal
+php artisan migrate --seed
+
+# 5. Link storage (untuk bukti pembayaran & gambar produk)
+php artisan storage:link
+
+# 6. Jalankan aplikasi
+npm run dev          # terminal 1
+php artisan serve    # terminal 2
+```
+
+Buka <http://localhost:8000>. Untuk build produksi, jalankan `npm run build`.
+
+> ⚠️ **Gunakan MySQL/MariaDB.** Salah satu migrasi (`update_status_enum_on_qris_orders_table`) memakai perintah `ALTER TABLE ... MODIFY COLUMN ... ENUM`, yang tidak didukung SQLite.
+
+---
+
+## 🔑 Akun Demo
+
+Dibuat oleh `RoleAndPermissionSeeder`:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Owner | `owner@garagecoffee.com` | `password` |
+| Kasir | `kasir@garagecoffee.com` | `password` |
+| Barista | `barista@garagecoffee.com` | `password` |
+
+
+
+---
+
+## 🔄 Alur Pesanan
+
+**POS (kasir)**
+```
+Kasir input pesanan → stok bahan terpotong otomatis → pending → processing → completed
+```
+
+**Web / QRIS (pelanggan)**
+```
+pending_payment → payment_uploaded → confirmed → processing → completed
+                                  ↘ cancelled (ditolak)
+```
+
+---
+
+## 🗺️ Ringkasan Route
+
+| Area | Prefix | Role |
+|------|--------|------|
+| E-Menu & QRIS | `/menu`, `/qris`, `/order/...` | Publik |
+| Admin | `/admin/...` | `owner` |
+| Manajemen QRIS | `/admin/qris-orders/...` | `owner`, `cashier`, `barista` |
+| POS | `/cashier/pos` | `owner`, `cashier` |
+| KDS | `/barista/kds` | `barista` |
+
+Daftar lengkap bisa dilihat dengan `php artisan route:list`.
+
+---
+
+## 🧰 Perintah Artisan Tambahan
+
+```bash
+php artisan garage:clean-old-data
+```
+Menghapus kategori dan produk lama yang tidak termasuk daftar menu aktif (*Main Course, Lite Bites, Eskosu, Basic Coffee, Mixology, Variant*). **Bersifat destruktif**, jadi backup database dulu.
+
+---
+
+## 🧪 Testing
+
+```bash
+php artisan test
+```
+
+---
+
+## 📸 Screenshot
+
+menyusul
+
+---
+
+## 📄 Lisensi
+
+Proyek ini menggunakan lisensi [MIT](https://opensource.org/licenses/MIT) (mengikuti Laravel).
+
+---
+
+<p align="center">Dibuat dengan ☕ untuk Garage Coffee</p>
